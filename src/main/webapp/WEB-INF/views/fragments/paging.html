@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+  <body>
+    
+    <div id="pagination">
+      
+      <nav aria-label="pagination">
+        <ul class="pagination pagination-pill justify-content-center">
+          <!-- pagination : center -->
+          <!-- Less than MaxPagesPerView and NOT only 1 page -->
+          <!--<span th:text="${collection.page.totalPages}"></span>-->
+          <div th:remove="tag" th:if="${collection.page.totalPages le maxPagesPerView and collection.page.totalPages ne 1}">
+            <li class="page-item one" th:classappend="${collection.page.currentPage eq i} ? 'active'"
+                th:each="i : ${#numbers.sequence(1, collection.page.totalPages, 1)}">
+              <a class="page-link" th:href="'?page=' + ${i} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+            </li>
+          </div>
+          
+          <!-- More than MaxPagesPerView and ON first page -->
+          <div th:remove="tag" th:if="${collection.page.totalPages gt maxPagesPerView and collection.page.currentPage eq 1}">
+            <li class="page-item two" th:classappend="${collection.page.currentPage eq i} ? 'active'"
+                th:each="i : ${#numbers.sequence(1, maxPagesPerView, 1)}">
+              <a class="page-link" th:href="'?page=' + ${i} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+            </li>
+            <li class="page-item three" th:if="${collection.page.currentPage le collection.page.totalPages - 3}">
+              <a class="page-link" th:href="'?page=' + ${collection.page.totalPages} + ${otherParams ne null ? otherParams : ''}" href="#">
+                <i class="fas fa-angle-double-right"></i>
+              </a>
+            </li>
+          </div>
+          
+          <!-- More than MaxPagesPerView and ON first page -->
+          <div th:remove="tag" th:if="${collection.page.totalPages gt maxPagesPerView and collection.page.currentPage gt 1 and collection.page.currentPage le 2}">
+            <li class="page-item four" th:classappend="${collection.page.currentPage eq i} ? 'active'"
+                th:each="i : ${#numbers.sequence(collection.page.currentPage - 1, collection.page.currentPage + 3, 1)}">
+              <a class="page-link" th:href="'?page=' + ${i} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+            </li>
+            <li class="page-item five" th:if="${collection.page.currentPage le collection.page.totalPages - 3}">
+              <a class="page-link" th:href="'?page=' + ${collection.page.totalPages} + ${otherParams ne null ? otherParams : ''}" href="#">
+                <i class="fas fa-angle-double-right"></i>
+              </a>
+            </li>
+          </div>
+          <div th:remove="tag" th:if="${collection.page.totalPages gt maxPagesPerView and collection.page.currentPage gt 2}">
+            <li class="page-item six" th:if="${collection.page.currentPage gt 3}">
+              <a class="page-link" th:href="'?page=1' + ${otherParams ne null ? otherParams : ''}" href="#">
+                <i class="fas fa-angle-double-left"></i>
+              </a>
+            </li>
+            <li class="page-item seven" th:classappend="${collection.page.currentPage eq i} ? 'active'" th:if="${collection.page.currentPage + 2 le collection.page.totalPages}"
+                th:each="i : ${#numbers.sequence(collection.page.currentPage - 2, collection.page.currentPage + 2, 1)}">
+              <a class="page-link" th:href="'?page=' + ${i} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+            </li>
+            <li class="page-item eight" th:classappend="${collection.page.currentPage eq i} ? 'active'" th:if="${collection.page.currentPage + 1 eq collection.page.totalPages}"
+                th:each="i : ${#numbers.sequence(collection.page.currentPage - 3, collection.page.totalPages, 1)}">
+              <a class="page-link" th:href="'?page=' + ${i} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+            </li>
+            <div th:remove="tag" th:if="${collection.page.currentPage eq collection.page.totalPages}">
+              <li class="page-item nine" th:classappend="${collection.page.currentPage eq i} ? 'active'"
+                  th:each="i : ${#numbers.sequence(collection.page.currentPage - 4, collection.page.totalPages, 1)}">
+                <a class="page-link" th:href="'?page=' + ${i} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+              </li>
+            </div>
+            <li class="page-item ten" th:if="${collection.page.currentPage le collection.page.totalPages - 3}">
+              <a class="page-link" th:href="'?page=' + ${collection.page.totalPages} + ${otherParams ne null ? otherParams : ''}" href="#">
+                <i class="fas fa-angle-double-right"></i>
+              </a>
+            </li>
+          </div>
+        </ul>
+      </nav>
+    </div>
+    
+    <div id="pagination3">
+      <!-- pagination : center -->
+      <nav aria-label="pagination" th:if="${collection.page.totalPages ne 1}">
+        <ul class="pagination pagination-pill justify-content-center">
+          
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Previous</a>
+          </li>
+          
+          <li class="page-item">
+            <a class="page-link" th:href="@{/} + ${basePage} + '?page=1' + '&limit=' + ${limit}" href="#">1</a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /pagination : center -->
+    </div>
+    
+    <div id="pagination2">
+      <!-- pagination -->
+      <nav aria-label="pagination" class="d-block text-center" th:if="${collection.page.localTotalElements gt collection.page.maxElementsPerPage}">
+        <ul class="pagination-custom list-unstyled">
+          <li class="page-item d-inline-block ml--2 mr--2" th:unless="${collection.page.currentPage lt 3 or collection.page.totalPages eq 3}">
+            <a class="page-link" th:href="@{/} + ${basePage} + '?page=1' + '&limit=' + ${limit}" href="#">
+              <i class="fas fa-angle-double-left"></i>
+            </a>
+          </li>
+          <!--          <li class="page-item d-inline-block ml--2 mr--2" th:unless="${collection.page.currentPage eq 1}">
+                      <a class="page-link" th:href="@{/users?page=} + ${collection.page.currentPage - 1}" href="#">
+                        <i class="fas fa-angle-left"></i>
+                      </a>
+                    </li>-->
+          <li class="page-item d-inline-block ml--2 mr--2" th:classappend="${collection.page.currentPage eq i} ? 'active'"
+              th:each="i : ${#numbers.sequence(1, 2, 1)}" th:if="${collection.page.totalPages eq 2}">
+            <a class="page-link" th:href="@{/} + ${basePage} + '?page=' + ${i} + '&limit=' + ${limit} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+          </li>
+          <li class="page-item d-inline-block ml--2 mr--2" th:classappend="${collection.page.currentPage eq i} ? 'active'"
+              th:each="i : ${#numbers.sequence(1, 3, 1)}" th:if="${collection.page.totalPages eq 3}">
+            <a class="page-link" th:href="@{/} + ${basePage} + '?page=' + ${i} + '&limit=' + ${limit} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+          </li>
+          <li class="page-item d-inline-block ml--2 mr--2" th:classappend="${collection.page.currentPage eq i} ? 'active'"
+              th:each="i : ${#numbers.sequence(collection.page.currentPage - 1, collection.page.currentPage + 1, 1)}" th:if="${collection.page.totalPages gt 3 and i ne 0 and i le collection.page.totalPages}">
+            <a class="page-link" th:href="@{/} + ${basePage} + '?page=' + ${i} + '&limit=' + ${limit} + ${otherParams ne null ? otherParams : ''}" href="#" th:text="${i}">1</a>
+          </li>
+          <!--          <li class="page-item d-inline-block ml--2 mr--2" aria-current="page">
+                      <span class="page-link">...</span>
+                    </li>-->
+          <!--          <li class="page-item d-inline-block ml--2 mr--2" th:unless="${collection.page.currentPage eq collection.page.totalPages}">
+                      <a class="page-link" th:href="@{/users?page=} + ${collection.page.currentPage + 1}" href="#">
+                        <i class="fas fa-angle-right"></i>
+                      </a>
+                    </li>-->
+          <li class="page-item d-inline-block ml--2 mr--2" th:unless="${collection.page.currentPage gt (collection.page.totalPages - 2) or collection.page.totalPages eq 3}">
+            <a class="page-link" th:href="@{/} + ${basePage} + '?page=' + ${collection.page.totalPages} + '&limit=' + ${limit} + ${otherParams ne null ? otherParams : ''}" href="#">
+              <i class="fas fa-angle-double-right"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- pagination -->
+    </div>
+  </body>
+</html>

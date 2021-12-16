@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{templates/template}">
+  <head>
+    <title>Вход</title>
+  </head>
+  <body>
+    <div layout:fragment="contentDiv">
+      <div class="d-flex align-items-center mb-3">
+        <h3>Вход</h3>
+      </div>
+      
+      <div class="row">
+        <div class="col-12">
+          <form th:action="authentication" method="post">
+            <div class="mb-3">
+              <label class="form-label">Имейл</label>
+              <input type="email" class="form-control" name="email" />
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Парола</label>
+              <input type="password" class="form-control" name="password" />
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Вход</button>
+          </form>
+        </div>
+      </div>
+    
+    </div>
+  </body>
+</html>

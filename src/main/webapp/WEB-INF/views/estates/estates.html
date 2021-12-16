@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{templates/template}">
+  <head>
+    <title>Имоти</title>
+  </head>
+  <body>
+    <div layout:fragment="contentDiv">
+      <div class="d-flex align-items-center mb-3">
+        <h3>Имоти</h3>
+        <h6 class="ms-auto" th:if="${collection.page.globalTotalElements ne 0}" th:text="'Показване от ' + ${collection.page.startPage} + ' до ' + ${collection.page.endPage}"></h6>
+      </div>
+      
+      <div class="row">
+        <div class="col-12 mb-3" th:if="${collection.page.globalTotalElements eq 0}">
+          <h5>Няма обяви за имоти</h5>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3" th:each="e : ${collection.data}" th:if="${collection.page.globalTotalElements ne 0}">
+          <div class="card shadow-sm">
+            <!--            <img class="card-img-top" alt="...">-->
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="#" style="text-decoration: none;" th:href="@{/estate?id=} + ${e.estateId}" th:text="${e.name}">Estate name</a>
+              </h5>
+              <div class="card-text">
+                <h4 class="mb-0" th:text="${#numbers.formatDecimal(e.price, 1, 'WHITESPACE', 2, 'POINT')} + ' лв.'">49834</h4>
+                <small class="d-block text-muted mb-2" th:text="${#numbers.formatDecimal(e.price / e.area, 1, 'WHITESPACE', 0, 'POINT')} + ' лв./кв.'">44</small>
+                <h5 class="d-inline" th:text="${e.isRent} ? 'Дава се под наем' : 'Продава се'">Type</h5>
+                <h5 class="d-inline" th:text="${#numbers.formatInteger(e.rooms, 1, 'WHITESPACE')} + '-стаен'">Rooms</h5>
+                <div></div>
+                <small class="text-muted" th:text="${e.country eq 'bg'} ? 'България' : (${e.country eq 'gb'} ? 'Великобритания')">Country</small>
+                <span class="text-muted">&bull;</span>
+                <small class="text-muted" th:text="${e.city}">City</small>
+              </div>
+              <hr class="my-2" />
+              <div class="card-text">
+                <span th:text="${#numbers.formatDecimal(e.area, 1, 'WHITESPACE', 2, 'POINT')} + ' кв. м.'">Area</span>
+                <span>&bull;</span>
+                <span th:text="${#numbers.formatInteger(e.floor, 1, 'WHITESPACE')}">Floor</span>
+                <span>етаж</span>
+              </div>
+              <hr class="my-2" />
+              <div class="card-text mb-3">
+                <small class="text-muted">Добавена на</small>
+                <small class="text-muted" th:text="${#dates.format(e.createdOn, 'dd.MM.yyyy, HH:mm')}">Created on</small>
+              </div>
+              <a href="#" class="btn btn-success btn-sm" th:href="@{/estate?id=} + ${e.estateId}">Преглед</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div th:insert="fragments/paging :: #pagination (otherParams=${otherParams})" th:remove="tag"></div>
+    </div>
+  </body>
+</html>

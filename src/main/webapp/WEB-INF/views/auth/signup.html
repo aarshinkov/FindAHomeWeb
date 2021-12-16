@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{templates/template}">
+  <head>
+    <title>Вход</title>
+  </head>
+  <body>
+    <div layout:fragment="contentDiv">
+      <div class="d-flex align-items-center mb-3">
+        <h3>Регистрация</h3>
+      </div>
+      
+      <div class="row">
+        <div class="col-12">
+          <form th:action="@{/signup}" method="post" th:object="${signup}">
+            <div class="mb-3">
+              <label class="form-label">Имейл</label>
+              <input type="email" class="form-control" th:field="*{email}"
+                     th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" />
+              <span class="invalid-feedback text-start" th:errors="*{email}">Error</span>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Парола</label>
+              <input type="password" class="form-control" th:field="*{password}"
+                     th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" />
+              <span class="invalid-feedback text-start" th:errors="*{password}">Error</span>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Потвърди парола</label>
+              <input type="password" class="form-control" th:field="*{confirmPassword}"
+                     th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'" />
+              <span class="invalid-feedback text-start" th:errors="*{confirmPassword}">Error</span>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Име</label>
+              <input type="text" class="form-control" th:field="*{firstName}"
+                     th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
+              <span class="invalid-feedback text-start" th:errors="*{firstName}">Error</span>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Фамилия</label>
+              <input type="text" class="form-control" th:field="*{lastName}"
+                     th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" />
+              <span class="invalid-feedback text-start" th:errors="*{lastName}">Error</span>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Регистрирай се</button>
+          </form>
+        </div>
+      </div>
+    
+    </div>
+  </body>
+</html>

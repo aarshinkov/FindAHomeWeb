@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{templates/template}">
+  <head>
+    <title th:text="'Имот ' + ${estate.name}">Имот</title>
+  </head>
+  <body>
+    <div layout:fragment="contentDiv">
+      <div class="d-flex align-items-center mb-3">
+        <h3 th:text="${estate.name}">Имот</h3>
+        <div class="ms-auto" sec:authorize="isAuthenticated()" th:if="${session.userId eq estate.user.userId}">
+          <a href="#" th:href="@{/estates/edit?id=} + ${estate.estateId}" class="btn btn-primary btn-sm">Редактиране</a>
+          <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Изтриване</a>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-12 mb-3">
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Тип на обявата</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.isRent} ? 'Под наем' : 'За продажба'"></div>
+            </div>
+          </div>
+          <hr />
+          
+          <div class="mb-2">Цена и квадратура</div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b th:if="${!estate.isRent}">Цена</b>
+              <b th:if="${estate.isRent}">Цена на месец</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${#numbers.formatDecimal(estate.price, 1, 'WHITESPACE', 2, 'POINT')} + ' лв.'"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Квадратура</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${#numbers.formatDecimal(estate.area, 1, 'WHITESPACE', 2, 'POINT')} + ' кв. м.'"></div>
+            </div>
+          </div>
+          <div class="row" th:if="${!estate.isRent}">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Цена на квадрат</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${#numbers.formatDecimal(estate.price / estate.area, 1, 'WHITESPACE', 2, 'POINT')} + ' лв./кв.'"></div>
+            </div>
+          </div>
+          
+          <hr />
+          <div class="mb-2">Местоположение</div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Страна</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.country eq 'bg'} ? 'България' : (${estate.country eq 'gb'} ? 'Великобритания')"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Населено място</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.city}"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Квартал</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.neighborhood}" th:if="${estate.neighborhood ne null}"></div>
+              <i th:if="${estate.neighborhood eq null}">-Няма информация-</i>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Адрес</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.address}"></div>
+            </div>
+          </div>
+          
+          <hr />
+          <div class="mb-2">Информация за имота</div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Етаж</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.floor}">3</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Стаи</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.rooms}">3</div>
+            </div>
+          </div>
+          
+          <hr />
+          <div class="mb-2">Информация за собственика</div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Име</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${estate.user.fullName}">John Doe</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Регистриран на</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${#dates.format(estate.user.createdOn, 'dd.MM.yyyy')}">25.11.2021</div>
+            </div>
+          </div>
+          
+          <hr />
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Създаване на обявата</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${#dates.format(estate.createdOn, 'dd.MM.yyyy, HH:mm')}">16.04.2021</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-4 col-lg-3">
+              <b>Последна редакция</b>
+            </div>
+            <div class="col-12 col-md-8 col-lg-9">
+              <div th:text="${#dates.format(estate.editedOn, 'dd.MM.yyyy, HH:mm')}" th:if="${estate.editedOn ne null}">18.04.2021</div>
+              <i th:if="${estate.editedOn eq null}">- Все още не е редактирана -</i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" sec:authorize="isAuthenticated()" th:if="${session.userId eq estate.user.userId}">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel" th:text="'Изтриване на ' + ${estate.name}">Title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p th:utext="'Наистина ли искате да изтриете обявата за имот <b>' + ${estate.name} + '</b>?'">Confirm message</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отказ</button>
+              
+              <form th:action="@{/estates/delete}" method="post">
+                
+                <input type="hidden" name="id" th:value="${estate.estateId}" />
+                <button type="submit" class="btn btn-danger">Изтрий</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
